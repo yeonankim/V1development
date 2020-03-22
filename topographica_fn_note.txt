@@ -1,0 +1,54 @@
+SCRIPT LOCATION: miniconda3/envs/py4topo/lib/python2.7/site-packages/
+e.g. ~/miniconda3/envs/py4topo/lib/python2.7/site-packages/imagen/image.py
+     ~/miniconda3/envs/py4topo/lib/python2.7/site-packages/topo
+
+Lauching options (topographica -h)
+-g: gui
+-i: interactive
+-p: specify parameters
+-c: arbitrary python command
+-a: auto import everything (e.g. topographica -a -c "generate_example('gcal_10000.typ')")
+
+* load snapshot topo.command.load_snapshot
+* generate .ty file to run as would run python from shell
+
+"pattern.Composite"
+and/or
+"pattern.SeparatedComposite"
+Probably should be able to combine numpy arrays. 
+
+"imagen/random.py"
+Random noise (loaded as 'import topo.pattern.random')
+
+"imagen/image.py"
+File image control
+
+"PIL/Image.py"
+"PIL/ImageOps.py"
+pilimage = Image.fromarray(nparray)
+
+Saving snapshot: topo.command.save_snapshot()
+
+[Mar18/20]
+* Added a new class 'CustomArray' in 'topo.pattern' ("miniconda3/envs/py4topo/lib/python2.7/site-packages/imagen/__init__.py")
+* Now this can generate a PatternGenerator class of a custom-generated numeric array (xdensity, ydensity, bounds are not automatically set in any way to match with the simulation scenarios and needs to be manually changed - this is for the sake of recording though and does not affect the simulation itself)
+
+
+[Mar05/20]
+* "miniconda3/envs/py4topo/lib/python2.7/site-packages/imagen/__init__.py" error during the call to 'topo.sim.run(...)' (function 'fmod' not found)
+* added "import math" and modified 'fmod' to 'math.fmod' --> 'topo.sim.run(...)' runs fine
+
+
+[Feb28/20]
+--- New class in "imagen/image.py"---
+*Added a new class 'ImcImage' to 'image.py' - works great! (not sure if topographica takes 16 bit for training but anyways)
+*removed "from numpy import array" due to the confict in importing 'array' package. All "array(...)" calls are changed to "numpy.array(...)"
+
+Confirmed that the image loads properly. The loaded image values are normalized to the scale from 0-1 (not sure normalized by max, or by 2^16). 
+---------
+im_to_save = Image.fromarray(IMCIMAGE*255)
+im_to_save.convert('RGB').save('testimc.png', "PNG", optimize=True)
+---------
+
+"size" attribute of the pattern --> probably relative to xdensity / ydensity both or one of the two (i.e. size=1 --> fill in the unit area in sheet coord)
+Stimulus pattern noise: gaussian with differnt standard deviations

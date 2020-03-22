@@ -1,0 +1,43 @@
+import topo.pattern, topo.command, numpy, Image
+
+topo.command.load_snapshot('gcal_mod_010000.00.typ')
+
+#---- Generate Stimulus Pattern Classes ----#
+pt_bg=topo.pattern.random.GaussianRandom(xdensity=topo.sim['Retina'].density,ydensity=topo.sim['Retina'].density,bounds=topo.sim['Retina'].bounds,scale=0.065,offset=0.5)
+bg_inst=topo.pattern.CustomArray(xdensity=topo.sim['Retina'].xdensity,ydensity=topo.sim['Retina'].ydensity,bounds=topo.sim['Retina'].bounds)
+#pt_gauss = topo.pattern.Gaussian(xdensity=topo.sim['Retina'].density,ydensity=topo.sim['Retina'].density,bounds=topo.sim['Retina'].bounds,aspect_ratio=1, scale=0.4)
+#pt_gauss.size = 0.125
+#pt=topo.pattern.Composite(generators=[bg_inst,pt_gauss],xdensity=topo.sim['Retina'].density,ydensity=topo.sim['Retina'].density)
+pt_delta = topo.pattern.RawRectangle(xdensity=topo.sim['Retina'].density, ydensity=topo.sim['Retina'].density,bounds=topo.sim['Retina'].bounds, size=1/topo.sim['Retina'].density, scale=0.3)
+pt=topo.pattern.Composite(generators=[bg_inst,pt_delta],xdensity=topo.sim['Retina'].density,ydensity=topo.sim['Retina'].density)
+pt_pos = pt
+pt_pos.operator=numpy.add
+
+dR_holder=numpy.zeros(topo.sim['V1'].shape)
+for iter in range(0,200):
+	r_noise=numpy.zeros(topo.sim['V1'].shape)
+	r_delta=numpy.zeros(topo.sim['V1'].shape)
+	dR=numpy.zeros(topo.sim['V1'].shape)
+
+	bg_inst.pattern_array=pt_bg()
+
+	topo.command.pattern_present(bg_inst)
+	r_noise=r_noise+topo.sim['V1'].activity
+	#print(numpy.amax(r_noise))
+	#Image.fromarray(255*r_noise/numpy.amax(r_noise)).convert('RGB').save("noiseresp%d.png"%iter)
+
+	topo.command.pattern_present(pt_pos)
+	r_delta=r_delta+topo.sim['V1'].activity
+	#print(numpy.amax(r_noise))
+	#print(numpy.amax(r_delta))
+	#Image.fromarray(255*r_delta/numpy.amax(r_delta)).convert('RGB').save("deltaresp%d.png"%iter)
+
+	dR=r_delta-r_noise
+	#Image.fromarray(255*dR/numpy.amax(dR)).convert('RGB').save("diffresp%d.png"%iter)
+
+	#stim=pt_pos()
+	#Image.fromarray(255*stim/numpy.amax(stim)).convert('RGB').save("stimulus%d.png"%iter)
+	dR_holder=dR_holder+dR
+		
+res=dR_holder/numpy.amax(numpy.absolute(dR_holder))+0.5
+Image.fromarray(255*res).convert('RGB').save('result3.png')

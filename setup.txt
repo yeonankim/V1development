@@ -1,0 +1,73 @@
+[2018 work]
+Topographica package from Jan (in jiji's email)
+python 2.7.14
+numpy 1.6.2
+matplotlib
+scipy
+ipython 3.0.0
+pil --> pillow
+
+(gmpy
+weave) -- through pil, but optional 
+
+
+
+[Jan, 2020]
+** ANACONDA INSTALLATION GUIDE
+https://gist.github.com/kauffmanes/5e74916617f9993bc3479f401dfec7da
+https://repo.continuum.io/archive/
+** FOR MINICONDA
+https://repo.continuum.io/miniconda/
+** INITLAIZED PATH SAVED AT
+~/.bashrc
+
+ALL THE DEPENDENCIES INSTALLED THROUGH PIP IN CONDA ENV (py4topo)
+----------------
+python 2.7.16
+scipy
+matplotlib
+ipython (optional)
+cython 	(optional)
+*numpy 1.8.2 (python -m pip install --upgrade numpy==1.8.2)
+gmpy (conda install --channel https://conda.binstar.org/oarodriguez gmpy)
+topographica (python -m pip install topographica --> automatically erase numpy 1.16 and reinstall numpy1.8.2)
+----------------
+
+
+
+[Best working installation seq]
+conda create --name py4topo python=2.7.16
+conda install scipy matplotlib numpy cython ipython
+conda install --channel https://conda.binstar.org/oarodriguez gmpy
+conda install weave -c conda-forge
+python -m pip install topographica
+
+
+[Github-version installation test: topographica FAILs to run due to numpy version]
+{Important dependecies: numpy, PIL --> pillow, gmpy, scipy, ipython, matplotlib, cython (run "python setup.py build_ext")}
+conda create --name py4topo python=2.7.16 numpy pillow scipy matplotlib
+ipython
+conda install --channel https://conda.binstar.org/oarodriguez gmpy
+conda install weave -c conda-forge
+conda install jinja2
+conda install nbformat
+conda install nbconvert
+conda install cython
+
+
+Default save folder: ~/Topographica
+Example folder: ~/miniconda3/envs/py4topo/share/topographica/examples (move 'gcal_mod.ty' to here)
+Topographica package location: ~/miniconda3/envs/py4topo/bin/topographica/examples
+Scripts (e.g.): ~/miniconda3/envs/py4topo/lib/python2.7/site-packages/topo
+		~/miniconda3/envs/py4topo/lib/python2.7/site-packages/imagen (move '__init__.py' and 'image.py' to here)
+
+
+--INFO ON VAN HATEREN NATRUAL IMAGE DATABASE--
+http://bethgelab.org/datasets/vanhateren/
+UV server:  /media/disk/databases/BBDD_video_image/Image_Statistic/Van_Hateren/vanhateren_imc
+
+
+-- UV SERVER ACCESS --
+ssh hal2900.uv.es -p 30
+scp <source> <destination>
+scp -P # /path/to/file username@a:/path/to/destination
